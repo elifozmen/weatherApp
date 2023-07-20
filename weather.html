@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .buttoncont {
+            background-color: #ffffff00;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 40px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        body {
+            background-image: url("https://myradar.com/static/background-a089d87ba11e1a4c45a8efa960b86092.jpg");
+            background-color: rgb(213, 231, 234);
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .red {
+            background: rgba(250, 219, 250, 0);
+            display: flex;
+            flex-direction: row;
+            border-radius: 60px/60px;
+            height: 300px;
+        }
+
+        .redish {
+            background: rgba(250, 219, 250, 0);
+            flex-direction: row;
+            height: 7%;
+        }
+
+        .pink {
+            background: rgba(128, 0, 128, 0);
+        }
+
+        .green {
+            background: rgba(250, 250, 250, 0);
+            height: 200px;
+        }
+
+        .greenish {
+            background: rgba(250, 250, 250, 0);
+            display: flex;
+            border-radius: 60px/60px;
+            max-width: fit-content;
+            min-width: fit-content;
+        }
+
+        .blue {
+            background: rgba(70, 131, 180, 0);
+        }
+
+        .altdiv {
+            float: left;
+            justify-content: space-evenly;
+            display: flex;
+        }
+
+        .aa {
+            background: rgba(255, 0, 0, 0);
+            display: flex;
+            margin: 0px;
+        }
+
+        .yellow {
+            background: rgba(250, 250, 0, 0);
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .yellowish {
+            background: rgba(255, 255, 0, 0);
+            flex-direction: column;
+        }
+
+        .white {
+            background: white;
+            height: 1;
+            padding: 0%;
+        }
+
+        .container div {
+            font-size: 5vw;
+            padding: .5em;
+            color: white;
+            flex: 1;
+        }
+
+        .button-section {
+            font-size: 30px !important;
+            ;
+
+            ;
+        }
+
+        .selected {
+            opacity: 1;
+            ;
+        }
+
+        .button-section:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+            transition: .3s;
+        }
+    </style>
+
+    <div id="main" class="container">
+        <div class="container">
+            <div class="purple" style="padding: 0%;">
+                <div class="red" style="padding: 0%;">
+                    <div class="pink" style="padding: 0%;">
+                        <div class="pink" id="locationName"
+                            style="font-size: 50px; padding:0px; font-style:initial; padding-left:0%;">San Francisco
+                        </div>
+                        <div class="pink" id="locationDate" style="font-size: 30px;">September 15, 2015 <br> </div>
+                        <div class="pink" style="font-size: 15px;"> <img id="weatherIcon" src="cloudy.png" width="100"
+                                height="100"> <br> </div>
+                        <div class="pink" id="weatherText" style="font-size: 25px;">Cloudy <br> </div>
+                    </div>
+
+                    <div class="blue" style="padding: 0%;">
+                        <div class="pink" id="temp"
+                            style="font-size: 70px; font-style: initial; text-align: center; padding-bottom: 0%;">
+                            72&deg;</div>
+                        <div class="pink" id="tempF" style="font-size: 35px; text-align: center; padding-top: 0%;">
+                            81&deg; <br> </div>
+                    </div>
+                </div>
+
+                <div class="green" style="padding: 0%; height: max-content;">
+                    <div class="aa" style="padding:0%">
+                        <div class="anadiv" style="padding:0%">
+                            <div class="altdiv button-section" style="padding: 0%;" id="hourlyButton"
+                                onclick="select(this)">
+                                <button class="buttoncont">Hourly</button>
+                            </div>
+
+                            <div class="altdiv button-section" style="padding: 0%;" id="precButton"
+                                onclick="select(this)">
+                                <button class="buttoncont">Precipitation</button>
+                            </div>
+
+                            <div class="altdiv button-section" style="padding: 0%;" id="detailsButton"
+                                onclick="select(this)">
+                                <button class="buttoncont">Details</button>
+                            </div>
+
+                            <div class="altdiv button-section" style="padding: 0%;" id="dailyButton"
+                                onclick="select(this)">
+                                <button class="buttoncont">Daily</button>
+                            </div>
+
+                            <br>
+
+                            <div class="white" style="padding: 0.04%;"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="greenish" style="padding: 0%;">
+                    <div id="anadiv" style="padding-left: 0%; padding-top: 0%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+
+            async function getData() {
+                nameOfLocation = prompt("Please enter the city", "Istanbul");
+                const response = await fetch("http://api.weatherapi.com/v1/forecast.json?key=c4c99848976e4c6fb8572723231007&q=" + nameOfLocation);
+                const data = await response.json();
+                console.log(data);
+
+                if (data) {
+                    loading = false;
+                }
+
+
+                document.querySelector("#locationName").innerText = data.location.name
+                document.querySelector("#locationDate").innerText = data.location.localtime
+                document.querySelector("#weatherIcon").src = "https:" + data.current.condition.icon
+                document.querySelector("#weatherText").innerText = data.current.condition.text
+                document.querySelector("#temp").innerText = data.current.temp_c + " °C"
+                document.querySelector("#tempF").innerText = data.current.temp_c + " °F"
+
+                const arr1 = data.location.localtime.split(' ');
+                localHour = arr1[1]
+
+                document.getElementById("hourlyButton").addEventListener("click", hourlyFunc)
+
+                function hourlyFunc() {
+                    document.querySelector("#anadiv").innerHTML = ""
+
+                    strN = `<div class="altdiv" style="padding:0%;"> 
+                            <div class="yellowish">
+                                <div class="yellow" id="now" style="font-size: 30px;">${localHour} &nbsp; 
+                                    </div> 
+                                    <div class="yellow" style="font-size: 15px;"> <img id="nowPic" <img src=https://${data.current.condition.icon} width="50" height="50"> <br> </div>
+                                    <div class="yellow" id="nowDeg" style="font-size: 25px;"> <br> ${data.current.temp_c}&deg; <br></div>
+                                    </div>
+                                    </div>`
+                    document.querySelector("#anadiv").insertAdjacentHTML('beforeend', strN)
+
+                    forecastDailyList = data.forecast.forecastday[0].hour
+
+                    
+
+                    forecastDailyList.forEach(element => {
+                        const arr = element.time.split(' ');
+                        hour = arr[1]
+
+                        if (Date.parse(element.time) > Date.parse(data.location.localtime)) {
+                            str = `<div class="altdiv" style="padding:0%;"> <div class="yellowish"><div class="yellow"  style="font-size: 30px;">${hour}&nbsp;</div> 
+                            <div class="yellow" style="font-size: 15px;"> <img src=https://${element.condition.icon} width="50" height="50"> <br> </div>
+                            <div class="yellow"  style="font-size: 25px;"> <br> ${element.temp_c}&deg; <br></div>
+                            </div>
+                            </div>`
+                            console.log("data", data);
+
+                            document.querySelector("#anadiv").insertAdjacentHTML('beforeend', str)
+
+                        }
+
+                    });
+                }
+
+                document.getElementById("precButton").addEventListener("click", precFunc)
+
+                function precFunc() {
+                    document.querySelector("#anadiv").innerHTML = ""
+
+                    strN = `<div class="altdiv" style="padding:0%;"> <div class="yellowish"><div class="yellow" id="now" style="font-size: 30px;">
+                        ${localHour} &nbsp; </div> <div class="yellow" style="font-size: 15px;"> <img id="nowPic" 
+                            <img src=https://${data.current.condition.icon} width="50" height="50"> <br> 
+                            </div><div class="yellow" id="nowDeg" style="font-size: 25px;"> 
+                        <br> ${data.current.precip_in}% <br></div></div></div>`
+
+                    document.querySelector("#anadiv").insertAdjacentHTML('beforeend', strN)
+
+                    forecastDailyList = data.forecast.forecastday[0].hour
+
+                    forecastDailyList.forEach(element => {
+                        const arr = element.time.split(' ');
+                        hour = arr[1]
+
+                        if (Date.parse(element.time) > Date.parse(data.location.localtime)) {
+                            str = `<div class="altdiv" style="padding:0%;"> <div class="yellowish"><div class="yellow"  style="font-size: 30px;">
+                                ${hour}&nbsp; </div> <div class="yellow" style="font-size: 15px;"> 
+                                    <img src=https://${element.condition.icon} width="50" height="50"> <br> 
+                                    </div><div class="yellow"  style="font-size: 25px;"> <br>
+                                 ${element.chance_of_rain}% <br></div></div></div>`
+                            console.log("data", data);
+
+                            document.querySelector("#anadiv").insertAdjacentHTML('beforeend', str)
+
+                        }
+                    });
+
+                }
+
+            }
+
+            window.addEventListener("load", (e) => {
+                getData()
+            });
+
+
+
+
+        </script>
+
+</html>
